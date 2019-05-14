@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "version": "0.1.0",
+  "name": "create-react-app",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "react-scripts start",
@@ -10,18 +10,22 @@
     "tslint": "tslint 'src/**/*.ts?(x)'",
     "precommit": "lint-staged",
     "component": "node scripts/component.js",
+    "redux": "node scripts/redux.js",
     "get": "node scripts/type.js"
   },
   "devDependencies": {
-    "@types/node": "11.13.7",
-    "@types/react": "16.8.14",
+    "@types/node": "12.0.1",
+    "@types/react": "16.8.17",
     "@types/react-dom": "16.8.4",
-    "@types/react-router-dom": "^4.3.2",
+    "@types/react-redux": "^7.0.9",
+    "@types/react-router-dom": "^4.3.3",
+    "@types/redux": "^3.6.0",
     "eslint-plugin-react-hooks": "^1.6.0",
-    "husky": "^2.0.0",
-    "lint-staged": "^8.1.5",
-    "node-sass": "^4.11.0",
-    "prettier": "^1.17.0",
+    "husky": "^2.2.0",
+    "lint-staged": "^8.1.6",
+    "node-sass": "^4.12.0",
+    "prettier": "^1.17.1",
+    "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.4.5"
@@ -30,8 +34,7 @@
     "pong-react-scripts": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "tslint": "^5.16.0"
+    "react-router-dom": "^5.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -54,20 +57,14 @@
   },
   "eslintConfig": {
     "extends": "react-app",
-    "plugins": [
-      "react-hooks"
-    ],
+    "plugins": ["react-hooks"],
     "rules": {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn"
     }
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
