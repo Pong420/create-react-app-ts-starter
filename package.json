@@ -14,15 +14,15 @@
     "get": "node scripts/type.js"
   },
   "devDependencies": {
-    "@types/node": "12.0.1",
-    "@types/react": "16.8.17",
+    "@types/node": "12.0.2",
+    "@types/react": "16.8.18",
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.9",
     "@types/react-router-dom": "^4.3.3",
     "@types/redux": "^3.6.0",
     "eslint-plugin-react-hooks": "^1.6.0",
-    "husky": "^2.2.0",
-    "lint-staged": "^8.1.6",
+    "husky": "^2.3.0",
+    "lint-staged": "^8.1.7",
     "node-sass": "^4.12.0",
     "prettier": "^1.17.1",
     "tslint": "^5.16.0",
@@ -31,7 +31,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "pong-react-scripts": "^3.0.0",
+    "pong-react-scripts": "^3.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0"

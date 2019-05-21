@@ -35,7 +35,7 @@ if (args[0] === 'init') {
   ];
 
   (async () => {
-    for (cmd of commands) {
+    for (const cmd of commands) {
       await execPromise(cmd);
     }
   })();
