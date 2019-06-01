@@ -29,7 +29,7 @@ const subdir = ['actions', 'epics', 'reducers'].map(dir =>
 
 if (args[0] === 'init') {
   const commands = [
-    `yarn add redux && yarn add --dev @types/redux`,
+    `yarn add redux`,
     `yarn add react-redux && yarn add --dev @types/react-redux`,
     `yarn add rxjs && yarn add redux-observable`
   ];
