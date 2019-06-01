@@ -3,7 +3,7 @@
 React starter with customized [react scripts](https://github.com/Pong420/create-react-app)
 
 ```bash
-git clone --depth=1 https://github.com/Pong420/CRA-ts-starter.git
+git clone --depth=1 https://github.com/Pong420/create-react-app-ts-starter.git
 ```
 
 ```bash
