@@ -45,4 +45,10 @@ img {
     font-size: 16px;
     font-weight: bold;
   }
+
+  .login-form-card {
+    button + button {
+      margin-top: 10px;
+    }
+  }
 }
