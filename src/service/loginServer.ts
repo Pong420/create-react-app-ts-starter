@@ -4,11 +4,10 @@ import {
   Param$LoginLoginServer,
   Response$LoginLoginServer,
 } from '../typings';
-import { WEB_SOCKET_URL } from '../constants';
 
 function connectToServer() {
   return new Promise<WebSocket>((resolve, reject) => {
-    const socket = new WebSocket(WEB_SOCKET_URL);
+    const socket = new WebSocket(window.preference.WEB_SOCKET_URL);
     socket.binaryType = 'arraybuffer';
 
     const timeout = setTimeout(

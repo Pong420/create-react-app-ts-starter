@@ -9,42 +9,25 @@ import {
 import { GameIdSelect } from '../GameIdSelect';
 import { createForm, FormProps } from '../../utils/form';
 import { NamePath } from '../../utils/form/typings';
-import { Schema$Params } from '../../typings';
+
+type Params = Record<string, any>;
 
 type Schema = {
-  [K in keyof Schema$Params]: { checked: boolean; value: Schema$Params[K] };
+  [K in keyof Params]: { checked: boolean; value: Params[K] };
 };
 
 type Name = NamePath<Schema>;
 
 const { Form, FormItem, useForm } = createForm<Schema>();
 
-const defaultParams: Schema = {
-  gameid: { checked: true, value: 'SB50' },
-  env: { checked: false, value: 'QA' },
-  dimension: { checked: false, value: 'hd' },
-  lockRatio: { checked: false, value: '1' },
-  // pid: { checked: false, value: 'TST' },
-  // username: { checked: false, value: 'test900' },
-  // slotToken: { checked: false, value: 'aa' },
-  // userFlag: { checked: false, value: '0' },
-  lang: { checked: false, value: 'ZH' },
-  disableBetTimeout: { checked: false, value: '1' },
-  runOnBlur: { checked: false, value: '1' },
-  disableFullscreen: { checked: false, value: '1' },
-  skipQA: { checked: false, value: '1' },
-  hideFPS: { checked: false, value: '1' },
-  disableHomeBtn: { checked: false, value: '1' },
-  lobbyUrl: { checked: true, value: 'http://google.com' },
-  canvas: { checked: false, value: 'true' },
-};
+const defaultParams: Schema = window.preference.defaultParams;
 
 const keys = Object.keys(defaultParams) as Array<keyof Schema>;
 
 export const useParamsForm = useForm;
 
 export function paramsToFormValue(
-  params: Partial<Schema$Params>,
+  params: Partial<Params>,
   defaultChecked = false
 ): Schema {
   return Object.entries(params).reduce(
@@ -56,7 +39,7 @@ export function paramsToFormValue(
   );
 }
 
-export function formValueToParams(values: Schema): Schema$Params {
+export function formValueToParams(values: Schema): Params {
   const entires = Object.entries(values) as [
     keyof Schema,
     Schema[keyof Schema]
@@ -64,7 +47,7 @@ export function formValueToParams(values: Schema): Schema$Params {
   return entires.reduce(
     (result, [key, { checked, value }]) =>
       checked ? { ...result, [key]: value } : result,
-    {} as Schema$Params
+    {} as Params
   );
 }
 
@@ -110,7 +93,7 @@ export function ParamsForm({
   form,
   onValuesChange,
   ...props
-}: FormProps<Schema> & { params?: Partial<Schema$Params> }) {
+}: FormProps<Schema> & { params?: Partial<Params> }) {
   const handleToggle: OnToggle['onToggle'] = (payload) => {
     if (form && onValuesChange) {
       form.setFieldsValue(payload);

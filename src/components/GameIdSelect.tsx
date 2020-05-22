@@ -1,6 +1,7 @@
 import React from 'react';
 import { HTMLSelect, IHTMLSelectProps } from '@blueprintjs/core';
-import { gameids } from '../constants';
+
+const gameids = window.preference.gameids || [];
 
 export function GameIdSelect(props: IHTMLSelectProps) {
   return (

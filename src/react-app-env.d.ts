@@ -5,6 +5,12 @@ declare module '*.scss';
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION__: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+
+  preference: {
+    WEB_SOCKET_URL: string;
+    gameids: string[];
+    defaultParams: any;
+  };
 }
 
 declare namespace NodeJS {

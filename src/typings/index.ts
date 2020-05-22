@@ -16,23 +16,3 @@ export type SubType<Base, Condition> = Pick<
 export type ValueOf<T> = T[keyof T];
 
 export * from './loginServer';
-
-export interface Schema$Params {
-  gameid: string;
-  env: string;
-  dimension: string;
-  lockRatio: string;
-  // pid: string;
-  // username: string;
-  // slotToken: string;
-  // userFlag: string;
-  lang: string;
-  disableBetTimeout: string;
-  runOnBlur: string;
-  disableFullscreen: string;
-  skipQA: string;
-  hideFPS: string;
-  disableHomeBtn: string;
-  lobbyUrl: string;
-  canvas: string;
-}
