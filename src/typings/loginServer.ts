@@ -5,9 +5,7 @@ export interface Param$GetLoginArrayBuffer {
   isTry?: boolean;
 }
 
-export interface Param$LoginLoginServer extends Param$GetLoginArrayBuffer {
-  url: string;
-}
+export interface Param$LoginLoginServer extends Param$GetLoginArrayBuffer {}
 
 export interface Response$LoginLoginServer {
   slotToken: string;

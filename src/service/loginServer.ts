@@ -4,10 +4,11 @@ import {
   Param$LoginLoginServer,
   Response$LoginLoginServer,
 } from '../typings';
+import { WEB_SOCKET_URL } from '../constants';
 
-function connectToServer(url: string) {
+function connectToServer() {
   return new Promise<WebSocket>((resolve, reject) => {
-    const socket = new WebSocket(url);
+    const socket = new WebSocket(WEB_SOCKET_URL);
     socket.binaryType = 'arraybuffer';
 
     const timeout = setTimeout(
@@ -100,11 +101,8 @@ function getHexToken(token: number[]): string {
     .toUpperCase();
 }
 
-export async function loginToLoginServer({
-  url,
-  ...params
-}: Param$LoginLoginServer) {
-  const socket = await connectToServer(url);
+export async function loginToLoginServer(params: Param$LoginLoginServer) {
+  const socket = await connectToServer();
   const result = await new Promise<Response$LoginLoginServer>(
     (resolve, reject) => {
       let residue: ArrayBuffer | null = null;

@@ -1,0 +1,9 @@
+.home {
+  @include sq-dimen(100%);
+
+  .#{$ns}-card {
+    + .#{$ns}-card {
+      margin-top: 20px;
+    }
+  }
+}
