@@ -26,6 +26,8 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
+    "@types/crypto-js": "^3.1.46",
+    "crypto-js": "^4.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2"
