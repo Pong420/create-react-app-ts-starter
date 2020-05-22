@@ -108,15 +108,22 @@ const NoClutterButton = createToggleButton('NoClutter', ['skipQA', 'hideFPS']);
 export function ParamsForm({
   params,
   form,
+  onValuesChange,
   ...props
 }: FormProps<Schema> & { params?: Partial<Schema$Params> }) {
-  const setFieldsValue = (form && form.setFieldsValue) || (() => {});
+  const handleToggle: OnToggle['onToggle'] = (payload) => {
+    if (form && onValuesChange) {
+      form.setFieldsValue(payload);
+      onValuesChange(payload, form.getFieldsValue());
+    }
+  };
 
   return (
     <Form
       {...props}
       className="params-form"
       form={form}
+      onValuesChange={onValuesChange}
       initialValues={{
         ...defaultParams,
         ...(params && paramsToFormValue(params, true)),
@@ -124,9 +131,9 @@ export function ParamsForm({
     >
       <div>
         <ButtonGroup>
-          <PCButton onToggle={setFieldsValue} />
-          <QAButton onToggle={setFieldsValue} />
-          <NoClutterButton onToggle={setFieldsValue} />
+          <PCButton onToggle={handleToggle} />
+          <QAButton onToggle={handleToggle} />
+          <NoClutterButton onToggle={handleToggle} />
         </ButtonGroup>
       </div>
       <div className="form-content">

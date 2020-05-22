@@ -9,12 +9,22 @@ interface Schema extends Param$LoginLoginServer, Response$LoginLoginServer {}
 
 const { Form, FormItem, useForm } = createForm<Schema>();
 
-const initialValues: Partial<Schema> = {
+const defaultValues: Partial<Schema> = {
   pid: 'TST',
   username: '',
   password: '',
   slotToken: '',
 };
+
+const storageKey = 'login-server-params';
+const initialValues = (() => {
+  let result = defaultValues;
+  try {
+    const cache = localStorage.getItem(storageKey);
+    if (cache) result = JSON.parse(cache);
+  } catch (error) {}
+  return result;
+})();
 
 export function LoginForm() {
   const [form] = useForm();
@@ -25,7 +35,14 @@ export function LoginForm() {
   });
 
   return (
-    <Form form={form} onFinish={run} initialValues={initialValues}>
+    <Form
+      form={form}
+      onFinish={run}
+      initialValues={initialValues}
+      onValuesChange={(_, values) =>
+        localStorage.setItem(storageKey, JSON.stringify(values))
+      }
+    >
       <FormItem name="pid" label="PID" validators={[validators.required('')]}>
         <InputGroup />
       </FormItem>
