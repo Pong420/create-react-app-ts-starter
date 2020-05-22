@@ -7,43 +7,41 @@ import {
   IButtonProps,
 } from '@blueprintjs/core';
 import { GameIdSelect } from '../GameIdSelect';
+import { LoaderUrlSelect } from '../LoaderUrlSelect';
 import { createForm, FormProps } from '../../utils/form';
-import { NamePath } from '../../utils/form/typings';
 
 type Params = Record<string, any>;
 
 type Schema = {
-  [K in keyof Params]: { checked: boolean; value: Params[K] };
+  loaderUrl: string;
+  params: { [K in keyof Params]: { checked: boolean; value: Params[K] } };
 };
-
-type Name = NamePath<Schema>;
 
 const { Form, FormItem, useForm } = createForm<Schema>();
 
-const defaultParams: Schema = window.preference.defaultParams;
+const defaultParams: Schema['params'] = window.preference.defaultParams;
 
-const keys = Object.keys(defaultParams) as Array<keyof Schema>;
+const keys = Object.keys(defaultParams) as Array<keyof Schema['params']>;
 
 export const useParamsForm = useForm;
 
 export function paramsToFormValue(
   params: Partial<Params>,
   defaultChecked = false
-): Schema {
+) {
   return Object.entries(params).reduce(
     (result, [key, value]) => ({
       ...result,
       [key]: { checked: defaultChecked, value },
     }),
-    {} as Schema
+    {} as Schema['params']
   );
 }
 
-export function formValueToParams(values: Schema): Params {
-  const entires = Object.entries(values) as [
-    keyof Schema,
-    Schema[keyof Schema]
-  ][];
+type Entries<T> = [keyof T, T[keyof T]][];
+
+export function formValueToParams(values: Schema['params']): Params {
+  const entires = Object.entries(values) as Entries<Schema['params']>;
   return entires.reduce(
     (result, [key, { checked, value }]) =>
       checked ? { ...result, [key]: value } : result,
@@ -52,23 +50,24 @@ export function formValueToParams(values: Schema): Params {
 }
 
 interface OnToggle {
-  onToggle: (payload: Partial<Schema>) => void;
+  onToggle: (payload: Schema['params']) => void;
 }
 
-function createToggleButton(text: string, deps: Array<keyof Schema>) {
+function createToggleButton(text: string, keys: Array<keyof Schema['params']>) {
+  const deps = keys.map((key) => ['params', key]) as any;
   return function ({ onToggle, ...props }: IButtonProps & OnToggle) {
     return (
       <FormItem deps={deps} noStyle>
-        {(values) => {
-          const checked = deps.every(
+        {({ params: values }) => {
+          const checked = keys.every(
             (prop) => values[prop] && values[prop].checked
           );
-          const newValues = deps.reduce(
+          const newValues = keys.reduce(
             (result, prop) => ({
               ...result,
               [prop]: { ...values[prop], checked: !checked },
             }),
-            {} as Partial<Schema>
+            {} as Schema['params']
           );
           return (
             <Button
@@ -88,31 +87,60 @@ const PCButton = createToggleButton('PC', ['dimension', 'lockRatio']);
 const QAButton = createToggleButton('QA', ['env']);
 const NoClutterButton = createToggleButton('NoClutter', ['skipQA', 'hideFPS']);
 
+const nil = () => {};
+
 export function ParamsForm({
-  params,
   form,
   onValuesChange,
+  initialValues,
   ...props
-}: FormProps<Schema> & { params?: Partial<Params> }) {
+}: FormProps<Schema>) {
+  const setFieldsValue = (form && form.setFieldsValue) || nil;
+  const handleValueChange = onValuesChange || nil;
   const handleToggle: OnToggle['onToggle'] = (payload) => {
-    if (form && onValuesChange) {
-      form.setFieldsValue(payload);
-      onValuesChange(payload, form.getFieldsValue());
+    if (form) {
+      form.setFieldsValue({ params: payload });
+      handleValueChange(payload, form.getFieldsValue());
     }
   };
+  const { loaderUrl = window.preference.loaderUrls[0], ...initialParams } =
+    initialValues || {};
 
   return (
     <Form
       {...props}
       className="params-form"
       form={form}
-      onValuesChange={onValuesChange}
+      onValuesChange={(changes, values) => {
+        handleValueChange(changes, values);
+
+        // auto select checkbox when it value changes
+        if (changes.params) {
+          let update: any = {};
+          for (const key in changes.params) {
+            if (
+              typeof changes.params[key].checked === 'undefined' &&
+              values.params[key].checked === false
+            ) {
+              update = { ...update, [key]: { checked: true } };
+            }
+          }
+          setFieldsValue({ params: update });
+        }
+      }}
       initialValues={{
-        ...defaultParams,
-        ...(params && paramsToFormValue(params, true)),
+        loaderUrl,
+        params: {
+          ...defaultParams,
+          ...(initialParams && paramsToFormValue(initialParams, true)),
+        },
       }}
     >
       <div>
+        <FormItem name="loaderUrl" label="URL">
+          <LoaderUrlSelect />
+        </FormItem>
+
         <ButtonGroup>
           <PCButton onToggle={handleToggle} />
           <QAButton onToggle={handleToggle} />
@@ -124,13 +152,13 @@ export function ParamsForm({
           return (
             <div className="params-row" key={key}>
               <FormItem
-                name={[key, 'checked'] as Name}
+                name={['params', key, 'checked'] as any}
                 valuePropName="checked"
                 noStyle
               >
                 <Checkbox large>{key}</Checkbox>
               </FormItem>
-              <FormItem name={[key, 'value'] as Name} noStyle>
+              <FormItem name={['params', key, 'value'] as any} noStyle>
                 {(() => {
                   switch (key) {
                     case 'gameid':

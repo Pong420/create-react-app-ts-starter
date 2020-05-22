@@ -9,6 +9,7 @@ declare interface Window {
   preference: {
     WEB_SOCKET_URL: string;
     gameids: string[];
+    loaderUrls: string[];
     defaultParams: any;
   };
 }

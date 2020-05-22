@@ -14,6 +14,7 @@ const defaultValues: Partial<Schema> = {
   username: '',
   password: '',
   slotToken: '',
+  userFlag: '',
 };
 
 const storageKey = 'login-server-params';
@@ -21,7 +22,7 @@ const initialValues = (() => {
   let result = defaultValues;
   try {
     const cache = localStorage.getItem(storageKey);
-    if (cache) result = JSON.parse(cache);
+    if (cache) result = { ...result, ...JSON.parse(cache) };
   } catch (error) {}
   return result;
 })();

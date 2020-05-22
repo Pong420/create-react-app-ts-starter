@@ -24,11 +24,6 @@ img {
   vertical-align: middle;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
 #root {
   @include sq-dimen(100%);
   max-width: 768px;
@@ -43,5 +38,11 @@ a {
     + .#{$ns}-card {
       margin-top: 20px;
     }
+  }
+
+  .output-url {
+    word-break: break-all;
+    font-size: 16px;
+    font-weight: bold;
   }
 }

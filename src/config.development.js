@@ -42,4 +42,18 @@ window.preference = {
     lobbyUrl: { checked: true, value: 'http://google.com' },
     canvas: { checked: false, value: 'true' },
   },
+
+  loaderUrls: [
+    'http://172.20.2.98:8080/egames/eGamesLobbyEntrance.html',
+    'http://172.20.2.98:8080/h5anakin/eGameH5/index.html',
+    'http://172.20.2.98:8080/egames/lobby_QA/index.html',
+    'http://172.20.2.98:8080/egames/lobby_v3/index.html',
+    'http://172.20.2.98:8080/h5anakin/lobby_v3/',
+    'http://172.20.2.98:8080/egames/index.jsp',
+    'http://172.20.2.98:8080/egames/xingame/eGameH5/index.html',
+    'http://172.20.2.98:8080/h5max/anchor-slot-replay/',
+    'http://172.20.2.98:8080/egames/anchor_slot/',
+    'http://172.20.2.98:8080/egames/anchor_slot_trial/',
+    'http://172.20.2.98:8080/h5anakin/luckyDraw/',
+  ],
 };
