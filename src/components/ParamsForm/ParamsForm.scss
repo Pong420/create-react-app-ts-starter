@@ -1,0 +1,18 @@
+.params-row {
+  @include flex(center, flex-start);
+
+  .#{$ns}-checkbox {
+    margin-bottom: 0;
+    min-width: 180px;
+  }
+
+  + .params-row {
+    margin-top: 10px;
+  }
+}
+
+.params-form {
+  .#{$ns}-button-group {
+    margin-bottom: 20px;
+  }
+}
