@@ -6,10 +6,11 @@ import { FormProps as RcFormProps } from 'rc-field-form/es/Form';
 import { FieldProps as RcFieldProps } from 'rc-field-form/es/Field';
 import { FieldData, FieldError, Store } from 'rc-field-form/lib/interface';
 import { Validator, compose as composeValidator } from './validators';
-import { NamePath } from './typings';
+import { NamePath, Paths, PathType } from './typings';
 
 export type FormInstance<S extends {} = Store, K extends keyof S = keyof S> = {
-  getFieldValue: <T extends NamePath<S>>(name: T) => T extends K ? S[T] : any;
+  getFieldValue(name: K): S[K];
+  getFieldValue<T extends Paths<S>>(name: T): PathType<S, T>;
   getFieldsValue: (nameList?: NamePath<S>[]) => S;
   getFieldError: (name: NamePath<S>) => string[];
   getFieldsError: (nameList?: NamePath<S>[]) => FieldError[];
@@ -50,13 +51,12 @@ interface BasicFormItemProps<S extends {} = Store>
   validators?:
     | Array<Validator | null>
     | ((value: S) => Array<Validator | null>);
-  onReset?(): void;
   label?: ReactNode;
   noStyle?: boolean;
   className?: string;
 }
 
-type Deps<S extends {} = Store> = Exclude<NamePath<S>, keyof S>;
+type Deps<S> = Array<NamePath<S>>;
 type FormItemPropsDeps<S extends {} = Store> =
   | {
       deps?: Deps<S>;
@@ -160,8 +160,9 @@ export function createForm<S extends {} = Store, V = S>({
       {
         name,
         rules,
-        dependencies: deps.length ? deps : undefined,
-        shouldUpdate: deps.length ? createShouldUpdate(deps) : undefined,
+        ...(deps.length
+          ? { dependencies: deps, shouldUpdate: createShouldUpdate(deps) }
+          : {}),
         ...props,
       },
       (
@@ -173,7 +174,7 @@ export function createForm<S extends {} = Store, V = S>({
 
         const childNode =
           typeof children === 'function'
-            ? children(getFieldsValue(deps as any))
+            ? children(getFieldsValue(deps))
             : React.cloneElement(children as React.ReactElement, {
                 ...control,
               });
@@ -190,9 +191,9 @@ export function createForm<S extends {} = Store, V = S>({
             className: [
               className,
               ClassNames.item,
+              error && ClassNames.error,
               touched && ClassNames.touched,
               validating && ClassNames.validating,
-              typeof error !== 'undefined' && ClassNames.error,
             ]
               .filter(Boolean)
               .join(' ')
@@ -237,9 +238,7 @@ export function createForm<S extends {} = Store, V = S>({
       )
   );
 
-  const useForm: (
-    form?: FormInstance<S>
-  ) => [FormInstance<S>] = RcUseForm as any;
+  const useForm: () => [FormInstance<S>] = RcUseForm as any;
 
   return {
     Form,

@@ -1,41 +1,90 @@
-type FilterFlags<Base, Condition> = {
-  [Key in keyof Base]: NonNullable<Base[Key]> extends Condition ? Key : never;
-};
-
-type AllowNames<Base, Condition> = NonNullable<
-  FilterFlags<Base, Condition>[keyof Base]
->;
-
 type ValueOf<T> = T[keyof T];
 
-export type FilterNamePath<Base> = {
-  [Key in keyof Base]: Base[Key] extends any[]
-    ?
-        | [Key, number]
-        | (FilterNamePath<Base[Key]>[number] extends never | unknown
-            ? never
-            : [
-                Key,
-                FilterNamePath<Base[Key]>[number][0],
-                FilterNamePath<Base[Key]>[number][1]
-              ])
-    : NonNullable<Base[Key]> extends object
-    ?
-        | [Key, AllowNames<NonNullable<Base[Key]>, string | number | boolean>]
-        | (AllowNamePath<Base[Key]>[number] extends never | unknown
-            ? never
-            :
-                | [Key, AllowNamePath<Base[Key]>[0]]
-                | [
-                    Key,
-                    AllowNamePath<Base[Key]>[0],
-                    AllowNamePath<Base[Key]>[1]
-                  ])
-    : never;
-};
+type Cons<H, T> = T extends readonly any[]
+  ? ((h: H, ...t: T) => void) extends (...r: infer R) => void
+    ? R
+    : never
+  : never;
 
-export type AllowNamePath<Base> = ValueOf<FilterNamePath<Base>>;
-export type NamePath<Base> =
-  | keyof Base
-  | Array<keyof Base | (keyof Base)[]>
-  | AllowNamePath<Base>;
+type Prev = [
+  never,
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  ...0[]
+];
+
+// https://stackoverflow.com/a/58436959
+export type Paths<T, D extends number = 10> = [D] extends [never]
+  ? never
+  : T extends any[] // for array
+  ? [number]
+  : T extends object
+  ? {
+      [K in keyof T]-?: K extends keyof T[K] & keyof ValueOf<T[K]>
+        ? (keyof T)[] // this turn [string, string, string] into string[]
+        :
+            | [K]
+            | (Paths<T[K], Prev[D]> extends infer P
+                ? P extends []
+                  ? never
+                  : Cons<K, P>
+                : never);
+    }[keyof T]
+  : [];
+
+interface NextInt {
+  0: 1;
+  1: 2;
+  2: 3;
+  3: 4;
+  4: 5;
+  [rest: number]: number;
+}
+
+export type PathType<T, P extends any[], Index extends keyof P & number = 0> = {
+  [K in keyof P & number & Index]: P[K] extends undefined
+    ? T
+    : P[K] extends keyof T
+    ? NextInt[K] extends keyof P & number
+      ? PathType<T[P[K]], P, Extract<NextInt[K], keyof P & number>>
+      : T[P[K]]
+    : never;
+}[Index];
+
+export type NamePath<T, D extends number = 4> = keyof T | Paths<T, D>;
+
+export interface Control<T = any> {
+  value?: T;
+  onChange?: (value: T) => void;
+}
+
+// for debug purpose
+type T = {
+  a: {
+    b: {
+      c: [1, 2, 3];
+    };
+  };
+};
+type T1 = NamePath<Record<number | string, any>>;
+type T2 = NamePath<Record<string, any>>;
+type T3 = NamePath<T>;
