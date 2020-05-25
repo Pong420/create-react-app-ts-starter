@@ -25,18 +25,25 @@ img {
 }
 
 #root {
-  @include sq-dimen(100%);
+  @include dimen(100%);
   max-width: 768px;
   margin: auto;
   padding: 15px;
 }
 
 .app {
-  @include sq-dimen(100%);
+  @include dimen(100%);
 
-  .#{$ns}-card {
-    + .#{$ns}-card {
-      margin-top: 20px;
+  form > {
+    .#{$ns}-card {
+      + button,
+      + .#{$ns}-card {
+        margin-top: 20px;
+      }
+    }
+
+    button + button {
+      margin-top: 10px;
     }
   }
 

@@ -1,13 +1,15 @@
 import React from 'react';
 import { InputGroup } from '@blueprintjs/core';
-import { createForm, validators, FormProps } from '../utils/form';
+import { createForm, validators } from '../utils/form';
 import { Param$LoginLoginServer, Response$LoginLoginServer } from '../typings';
 
-interface Schema extends Param$LoginLoginServer, Response$LoginLoginServer {}
+export interface LoginFormState
+  extends Param$LoginLoginServer,
+    Response$LoginLoginServer {}
 
-const { Form, FormItem, useForm } = createForm<Schema>();
+const { FormItem } = createForm<LoginFormState>();
 
-const defaultValues: Partial<Schema> = {
+export const defaultLoginFormValues: Partial<LoginFormState> = {
   pid: 'TST',
   username: '',
   password: '',
@@ -15,58 +17,48 @@ const defaultValues: Partial<Schema> = {
   userFlag: '',
 };
 
-export const useLoginForm = useForm;
+// const storageKey = 'login-server-params';
+// const initialValues = (() => {
+//   let result = defaultValues;
+//   try {
+//     const cache = localStorage.getItem(storageKey);
+//     if (cache) result = { ...result, ...JSON.parse(cache) };
+//   } catch (error) {}
+//   return result;
+// })();
 
-const storageKey = 'login-server-params';
-const initialValues = (() => {
-  let result = defaultValues;
-  try {
-    const cache = localStorage.getItem(storageKey);
-    if (cache) result = { ...result, ...JSON.parse(cache) };
-  } catch (error) {}
-  return result;
-})();
+export const LoginForm = React.memo(({ children }) => {
+  return (
+    <>
+      <FormItem name="pid" label="PID" validators={[validators.required('')]}>
+        <InputGroup />
+      </FormItem>
 
-export const LoginForm = React.memo<FormProps<Schema>>(
-  ({ children, ...props }) => {
-    return (
-      <Form
-        {...props}
-        initialValues={initialValues}
-        onValuesChange={(_, values) =>
-          localStorage.setItem(storageKey, JSON.stringify(values))
-        }
+      <FormItem
+        name="username"
+        label="Username"
+        validators={[validators.required('Username cannot be empty')]}
       >
-        <FormItem name="pid" label="PID" validators={[validators.required('')]}>
-          <InputGroup />
-        </FormItem>
+        <InputGroup />
+      </FormItem>
 
-        <FormItem
-          name="username"
-          label="Username"
-          validators={[validators.required('')]}
-        >
-          <InputGroup />
-        </FormItem>
+      <FormItem
+        name="password"
+        label="Password"
+        validators={[validators.required('Password cannot be empty')]}
+      >
+        <InputGroup />
+      </FormItem>
 
-        <FormItem
-          name="password"
-          label="Password"
-          validators={[validators.required('')]}
-        >
-          <InputGroup />
-        </FormItem>
+      <FormItem name="slotToken" label="slotToken">
+        <InputGroup readOnly />
+      </FormItem>
 
-        <FormItem name="slotToken" label="slotToken">
-          <InputGroup readOnly />
-        </FormItem>
+      <FormItem name="userFlag" label="userFlag">
+        <InputGroup readOnly />
+      </FormItem>
 
-        <FormItem name="userFlag" label="userFlag">
-          <InputGroup readOnly />
-        </FormItem>
-
-        {children}
-      </Form>
-    );
-  }
-);
+      {children}
+    </>
+  );
+});
