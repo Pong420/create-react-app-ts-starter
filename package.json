@@ -38,20 +38,16 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "eslint --rule 'no-console: [\"error\", { allow: [\"warn\", \"error\"] }]' --max-warnings=0",
-      "prettier --ignore-path .eslintignore --write",
-      "git add"
+      "prettier --ignore-path .eslintignore --write"
     ],
     "{*.json,.{babelrc,eslintrc,prettierrc}}": [
-      "prettier --ignore-path .eslintignore --parser json --write",
-      "git add"
+      "prettier --ignore-path .eslintignore --parser json --write"
     ],
     "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ],
     "*.{yml,md}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },
   "eslintConfig": {
@@ -61,7 +57,11 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
